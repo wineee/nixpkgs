@@ -32257,7 +32257,7 @@ with pkgs;
     nix_2_4
     nixUnstable;
 
-  nixStatic = pkgsStatic.nix;
+  nixStatic = pkgsStatic.nix_2_3;
 
   nixops = callPackage ../tools/package-management/nixops { };
 
