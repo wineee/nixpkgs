@@ -24217,6 +24217,8 @@ with pkgs;
 
   coreimage = libsForQt5.callPackage ../applications/graphics/coreimage { };
 
+  cpeditor = callPackage ../applications/editors/cpeditor { };
+
   csa = callPackage ../applications/audio/csa { };
 
   csound = callPackage ../applications/audio/csound { };
