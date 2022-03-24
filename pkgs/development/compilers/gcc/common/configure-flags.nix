@@ -80,6 +80,10 @@ let
       # See Note [Windows Exception Handling]
       "--enable-sjlj-exceptions"
       "--with-dwarf2"
+    ] ++ lib.optionals targetPlatform.isAlpha [
+      "--mieee-conformant"
+      "--mtrap-precision=i"
+      "--mfp-trap-mode=su"
     ] else [
       (if crossDarwin then "--with-sysroot=${lib.getLib libcCross}/share/sysroot"
        else                "--with-headers=${lib.getDev libcCross}${libcCross.incdir or "/include"}")
