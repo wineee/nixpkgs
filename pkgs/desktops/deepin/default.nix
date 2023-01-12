@@ -30,6 +30,7 @@ let
     udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
 
     #### CORE
+    dde-dock = callPackage ./core/dde-dock { };
     dde-calendar = callPackage ./core/dde-calendar { };
     dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
     dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
