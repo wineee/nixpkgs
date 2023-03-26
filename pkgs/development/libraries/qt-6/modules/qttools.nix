@@ -3,12 +3,17 @@
 , lib
 , qtbase
 , qtdeclarative
+, llvmPackages
 , cups
 , substituteAll
 }:
 
 qtModule {
   pname = "qttools";
+  buildInputs = [
+    llvmPackages.libclang
+    llvmPackages.llvm
+  ];
   qtInputs = [ qtbase qtdeclarative ];
   propagatedBuildInputs = lib.optionals stdenv.isDarwin [ cups ];
   patches = [
