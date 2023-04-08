@@ -3,12 +3,17 @@
 , lib
 , qtbase
 , qtdeclarative
+, llvmPackages
 , cups
 , substituteAll
 }:
 
 qtModule {
   pname = "qttools";
+  buildInputs = [
+    llvmPackages.libclang
+    llvmPackages.llvm
+  ];
   qtInputs = [ qtbase qtdeclarative ];
   propagatedBuildInputs = lib.optionals stdenv.isDarwin [ cups ];
   patches = [
@@ -25,18 +30,18 @@ qtModule {
     "bin/qdoc"
     "bin/lconvert"
     "bin/designer"
-    "bin/qtattributionsscanner"
     "bin/lrelease"
-    "bin/lrelease-pro"
     "bin/pixeltool"
     "bin/lupdate"
-    "bin/lupdate-pro"
     "bin/qtdiag"
-    "bin/qhelpgenerator"
     "bin/qtplugininfo"
     "bin/qthelpconverter"
-    "bin/lprodump"
     "bin/qdistancefieldgenerator"
+    "libexec/lprodump"
+    "libexec/lrelease-pro"
+    "libexec/lupdate-pro"
+    "libexec/qhelpgenerator"
+    "libexec/qtattributionsscanner"
   ] ++ lib.optionals stdenv.isDarwin [
     "bin/macdeployqt"
   ];
