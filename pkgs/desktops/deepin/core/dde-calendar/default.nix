@@ -6,44 +6,31 @@
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
+, libical
 , cmake
 , qttools
 , pkg-config
 , wrapQtAppsHook
 , runtimeShell
 , qtbase
-, gtest
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-calendar";
-  version = "5.8.30";
+  version = "5.10.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-8/UXq9W3Gb1Lg/nOji6zcHJts6lgY2uDxvrBxQs3Zio=";
+    sha256 = "sha256-MRB4dzjOkdySRD01bMhYIVajz08xA3f3Srscrxc6wgU";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore-use-GNUInstallDirs-in-CmakeLists.patch";
-      url = "https://github.com/linuxdeepin/dde-calendar/commit/b9d9555d90a36318eeee62ece49250b4bf8acd10.patch";
-      sha256 = "sha256-pvgxZPczs/lkwNjysNuVu+1AY69VZlxOn7hR9A02/3M=";
-    })
-  ];
+  patches = [ ./0001-feat-avoid-use-hardcode-path.patch ];
 
   postPatch = ''
-    substituteInPlace calendar-service/src/dbmanager/huanglidatabase.cpp \
-      --replace "/usr/share/dde-calendar/data/huangli.db" "$out/share/dde-calendar/data/huangli.db"
-    substituteInPlace calendar-service/src/main.cpp \
-      --replace "/usr/share/dde-calendar/translations" "$out/share/dde-calendar/translations"
-    substituteInPlace calendar-service/assets/data/com.deepin.dataserver.Calendar.service \
-      --replace "/usr/lib/deepin-daemon/dde-calendar-service" "$out/lib/deepin-daemon/dde-calendar-service"
-    substituteInPlace calendar-client/assets/dbus/com.deepin.Calendar.service \
-      --replace "/usr/bin/dde-calendar" "$out/bin/dde-calendar"
-    substituteInPlace calendar-service/{src/{csystemdtimercontrol.cpp,jobremindmanager.cpp},assets/{data/com.dde.calendarserver.calendar.service,dde-calendar-service.desktop}} \
+    substituteInPlace calendar-service/src/{alarmManager/dalarmmanager.cpp,csystemdtimercontrol.cpp,calendarDataManager/daccountmanagemodule.cpp} \
+    calendar-service/assets/{dde-calendar-service.desktop,/data/com.dde.calendarserver.calendar.service} \
       --replace "/bin/bash" "${runtimeShell}"
   '';
 
@@ -58,7 +45,7 @@ stdenv.mkDerivation rec {
     dtkwidget
     qt5platform-plugins
     dde-qt-dbus-factory
-    gtest
+    libical
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
@@ -67,10 +54,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postFixup = ''
-    wrapQtApp $out/lib/deepin-daemon/dde-calendar-service
-  '';
 
   meta = with lib; {
     description = "Calendar for Deepin Desktop Environment";
