@@ -4,7 +4,6 @@
 , fetchpatch
 , cmake
 , pkg-config
-, ninja
 , python3
 , qtbase
 , qt5compat
@@ -45,13 +44,20 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  # avoid fix-qt-builtin-paths hook substitute QT_INSTALL_DOCS to qtdoc's path
+  postPatch = ''
+    for file in $(grep -rl '$QT_INSTALL_DOCS'); do
+      substituteInPlace $file \
+          --replace '$QT_INSTALL_DOCS' "${qtbase}/share/doc"
+    done
+  '';
+
   nativeBuildInputs = [
     cmake
     pkg-config
     qttools
     wrapQtAppsHook
     python3
-    ninja
   ];
 
   buildInputs = [
@@ -88,11 +94,15 @@ stdenv.mkDerivation rec {
     "-DCLANGTOOLING_LINK_CLANG_DYLIB=ON"
   ];
 
+  buildFlags = [ "all" "docs" ];
+
   qtWrapperArgs = [
     "--set-default PERFPROFILER_PARSER_FILEPATH ${lib.getBin perf}/bin"
   ];
 
   postInstall = ''
+    cp -r share/doc $out/share
+
     substituteInPlace $out/share/applications/org.qt-project.qtcreator.desktop \
       --replace "Exec=qtcreator" "Exec=$out/bin/qtcreator"
   '';
