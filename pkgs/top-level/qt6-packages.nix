@@ -45,4 +45,8 @@ in
     qt6Support = true;
     suffix = "qt6";
   };
+
+  wayqt = callPackage ../development/libraries/wayqt {
+    wlroots = pkgs.wlroots_0_16;
+  };
 })))
