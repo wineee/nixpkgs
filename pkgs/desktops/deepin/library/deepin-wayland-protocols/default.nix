@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-wayland-protocols";
-  version = "1.6.0-deepin.1.2";
+  version = "1.10.0.28";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-8Im3CueC8sYA5mwRU/Z7z8HA4mPQvVSqcTD813QCYxo=";
+    hash = "sha256-JL3UN8/DcZerI2s4Kk+QbweRwFdarSNBPZ6z6E1qGqg=";
   };
 
   nativeBuildInputs = [
