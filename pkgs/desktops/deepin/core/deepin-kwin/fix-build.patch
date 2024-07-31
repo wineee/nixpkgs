@@ -1,0 +1,12 @@
+diff --git a/src/dockrect.h b/src/dockrect.h
+index f77a763b3..c8de17b7d 100644
+--- a/src/dockrect.h
++++ b/src/dockrect.h
+@@ -7,6 +7,7 @@
+ #ifndef DOCKRECT_H
+ #define DOCKRECT_H
+ 
++#include <QMetaProperty>
+ #include <QtCore/QObject>
+ #include <QtCore/QByteArray>
+ #include <QtCore/QList>

@@ -37,21 +37,26 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "5.25.27";
+  version = "5.27.2.203";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-EjPPjdxa+iL/nXhuccoM3NiLmGXh7Un2aGz8O3sP6xE=";
+    hash = "sha256-tLA0fzmzuUXwOeEYDDekkFb0biVctzcL1NfHkwjjqSc=";
   };
 
-  patches = [ ./0001-hardcode-fallback-background.diff ];
+  patches = [
+    ./fix-build.patch
+  ];
 
-  # Avoid using absolute path to distinguish applications
   postPatch = ''
-    substituteInPlace src/effects/screenshot/screenshotdbusinterface1.cpp \
-      --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")' 'file.readAll().contains("dde-dock")'
+    substituteInPlace src/effects/multitaskview/multitaskview.cpp \
+      --replace-fail "/usr/share/wallpapers" "/run/current-system/sw/share"
+    substituteInPlace configures/CMakeLists.txt \
+      --replace-fail "/usr" "$out"
+
+    patchShebangs src/effects/strip-effect-metadata.py
   '';
 
   nativeBuildInputs = [
@@ -59,6 +64,8 @@ stdenv.mkDerivation rec {
     pkg-config
     extra-cmake-modules
     wrapQtAppsHook
+    python3
+    #file # strip-effect-metadata.py
   ];
 
   buildInputs = [
@@ -66,7 +73,9 @@ stdenv.mkDerivation rec {
     qttools
     qtx11extras
     wayland
-    dwayland
+    kwayland
+    wayland-protocols
+    deepin-wayland-protocols
     libepoxy
     gsettings-qt
 
@@ -87,7 +96,7 @@ stdenv.mkDerivation rec {
     kdecoration
     kscreenlocker
 
-    breeze-qt5
+    #breeze-qt5
     libinput
     mesa
     lcms2
@@ -98,6 +107,7 @@ stdenv.mkDerivation rec {
     xorg.xcbutilcursor
     xorg.libXtst
     xorg.libXScrnSaver
+    xorg.libxcvt
   ];
 
   cmakeFlags = [ "-DKWIN_BUILD_RUNNERS=OFF" ];
