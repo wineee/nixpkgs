@@ -5,7 +5,7 @@
   cmake,
   pkg-config,
   wayland,
-  dwayland,
+  kwayland,
   qtbase,
   qttools,
   qtx11extras,
@@ -33,6 +33,8 @@
   mesa,
   lcms2,
   xorg,
+  python3,
+  wayland-protocols,
 }:
 
 stdenv.mkDerivation rec {
